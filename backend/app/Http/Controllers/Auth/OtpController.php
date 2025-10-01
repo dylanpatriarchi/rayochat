@@ -56,16 +56,15 @@ class OtpController extends Controller
 
         // Send OTP email (placeholder - will be configured with Zoho SMTP)
         try {
-            Mail::raw("Your OTP code is: {$otpCode}. This code will expire in 10 minutes.", function ($message) use ($user) {
+            Mail::raw("Il tuo codice OTP è: {$otpCode}. Questo codice scadrà in 10 minuti.", function ($message) use ($user) {
                 $message->to($user->email)
-                        ->subject('Your Login OTP Code');
+                        ->subject('Il tuo codice OTP per il login');
             });
         } catch (\Exception $e) {
-            // For now, just log the OTP for testing
-            \Log::info("OTP for {$user->email}: {$otpCode}");
+            \Log::info("Failed auth.");
         }
 
-        return redirect()->route('otp.verify')->with('email', $user->email)->with('success', 'OTP sent to your email address.');
+        return redirect()->route('otp.verify')->with('email', $user->email)->with('success', 'OTP inviato alla tua email.');
     }
 
     public function showVerifyForm()
@@ -104,7 +103,7 @@ class OtpController extends Controller
                    ->first();
 
         if (!$user) {
-            return back()->withErrors(['otp_code' => 'Invalid, expired, or session expired OTP code.'])->withInput();
+            return back()->withErrors(['otp_code' => 'Codice OTP invalido, scaduto o sessione scaduta.'])->withInput();
         }
 
         // Clear OTP and session token after successful verification
@@ -126,21 +125,4 @@ class OtpController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function logout(Request $request)
-    {
-        // Clear any pending OTP data
-        if (Auth::check()) {
-            Auth::user()->update([
-                'otp_code' => null,
-                'otp_expires_at' => null,
-                'otp_session_token' => null,
-            ]);
-        }
-        
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('login')->with('success', 'You have been logged out successfully.');
-    }
 }

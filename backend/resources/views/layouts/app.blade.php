@@ -229,6 +229,100 @@
             margin-top: 0.25rem;
         }
 
+        .relative {
+            position: relative;
+        }
+
+        .absolute {
+            position: absolute;
+        }
+
+        .right-3 {
+            right: 0.75rem;
+        }
+
+        .top-1\/2 {
+            top: 50%;
+        }
+
+        .transform {
+            transform: translateY(-50%);
+        }
+
+        .text-orange-500 {
+            color: #ff6b35;
+        }
+
+        .text-orange-600 {
+            color: #e55a2b;
+        }
+
+        .hover\:text-orange-600:hover {
+            color: #e55a2b;
+        }
+
+        .transition-colors {
+            transition: color 0.2s ease;
+        }
+
+        .w-5 {
+            width: 1.25rem;
+        }
+
+        .h-5 {
+            height: 1.25rem;
+        }
+
+        .pr-12 {
+            padding-right: 3rem;
+        }
+
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .text-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-gray-900 {
+            color: #111827;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .bg-green-100 {
+            background-color: #dcfce7;
+        }
+
+        .border-green-400 {
+            border-color: #4ade80;
+        }
+
+        .text-green-700 {
+            color: #15803d;
+        }
+
+        .border {
+            border-width: 1px;
+        }
+
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -252,6 +346,9 @@
             <div class="header-content">
                 <a href="{{ route('dashboard') }}" class="logo">RayoChat</a>
                 <nav class="nav">
+                    <a href="#" class="nav-link">Cookie Policy</a>
+                    <a href="#" class="nav-link">Privacy Policy</a>
+                    <a href="#" class="nav-link">Terms of Service</a>
                     @auth
                         <span class="text-gray">Welcome, {{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -266,18 +363,6 @@
 
     <main class="main-content">
         <div class="container">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-error">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             @yield('content')
         </div>
     </main>
