@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Site;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -117,5 +118,69 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.site-owners.index')
             ->with('success', 'Site Owner eliminato con successo!');
+    }
+
+    /**
+     * Display a listing of all sites grouped by site owners
+     */
+    public function sitesIndex()
+    {
+        $siteOwners = User::role('site-owner')
+            ->with(['sites' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->get();
+
+        $totalSites = Site::count();
+        $totalSiteOwners = $siteOwners->count();
+
+        return view('admin.sites.index', compact('siteOwners', 'totalSites', 'totalSiteOwners'));
+    }
+
+    /**
+     * Display the specified site
+     */
+    public function sitesShow(Site $site)
+    {
+        return view('admin.sites.show', compact('site'));
+    }
+
+    /**
+     * Show the form for editing the specified site
+     */
+    public function sitesEdit(Site $site)
+    {
+        return view('admin.sites.edit', compact('site'));
+    }
+
+    /**
+     * Update the specified site
+     */
+    public function sitesUpdate(Request $request, Site $site)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url|max:255',
+        ]);
+
+        $site->update([
+            'name' => $request->name,
+            'url' => $request->url,
+        ]);
+
+        return redirect()->route('admin.sites.index')
+            ->with('success', 'Sito aggiornato con successo!');
+    }
+
+    /**
+     * Remove the specified site
+     */
+    public function sitesDestroy(Site $site)
+    {
+        $siteOwnerName = $site->user->name;
+        $site->delete();
+
+        return redirect()->route('admin.sites.index')
+            ->with('success', "Sito di {$siteOwnerName} eliminato con successo!");
     }
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Dashboard') - RayoChat</title>
+    <title>@yield('title', 'Dashboard Site Owner') - RayoChat</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -191,7 +191,7 @@
             
             <nav class="px-4 pb-4">
                 <div class="space-y-1">
-                    <a href="{{ route('admin.dashboard') }}" class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('site-owner.dashboard') }}" class="sidebar-item {{ request()->routeIs('site-owner.dashboard') ? 'active' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"/>
@@ -199,18 +199,11 @@
                         Dashboard
                     </a>
                     
-                    <a href="{{ route('admin.site-owners.index') }}" class="sidebar-item {{ request()->routeIs('admin.site-owners.*') ? 'active' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                        </svg>
-                        Site Owners
-                    </a>
-                    
-                    <a href="{{ route('admin.sites.index') }}" class="sidebar-item {{ request()->routeIs('admin.sites.*') ? 'active' : '' }}">
+                    <a href="{{ route('site-owner.sites.create') }}" class="sidebar-item {{ request()->routeIs('site-owner.sites.*') ? 'active' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
                         </svg>
-                        Siti
+                        Gestione Siti
                     </a>
                 </div>
             </nav>
@@ -224,7 +217,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <h1 class="text-2xl font-semibold text-gray-900">@yield('page-title', 'Dashboard')</h1>
-                            <p class="text-sm text-gray-500 mt-1">@yield('page-description', 'Gestisci la tua piattaforma')</p>
+                            <p class="text-sm text-gray-500 mt-1">@yield('page-description', 'Gestisci i tuoi siti')</p>
                         </div>
                         
                         <div class="flex items-center space-x-4">
