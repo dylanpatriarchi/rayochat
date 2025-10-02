@@ -9,8 +9,16 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $roleName = $user->getRoleNames()->first() ?? 'No Role';
         
-        return view('dashboard', compact('roleName'));
+        // Redirect admin users to admin dashboard
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+        
+        $roleName = $user->getRoleNames()->first() ?? false;
+        if($roleName) {
+            return view('dashboard', compact('roleName'));
+        }
+        return redirect()->route('login');
     }
 }

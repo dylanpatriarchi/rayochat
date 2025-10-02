@@ -25,6 +25,7 @@ class User extends Authenticatable
         'otp_expires_at',
         'otp_session_token',
         'last_login_at',
+        'max_number_sites',
     ];
 
     /**

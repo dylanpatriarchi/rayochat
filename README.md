@@ -57,7 +57,7 @@ To enable email sending, update the following in `backend/.env`:
 
 ```env
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.zoho.com
+MAIL_HOST=smtp.zoho.eu
 MAIL_PORT=587
 MAIL_USERNAME=your-email@zoho.com
 MAIL_PASSWORD=your-app-password
