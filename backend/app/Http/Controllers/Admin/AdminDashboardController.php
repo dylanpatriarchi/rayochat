@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Site;
+use App\Models\SiteInfoMD;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -127,7 +128,7 @@ class AdminDashboardController extends Controller
     {
         $siteOwners = User::role('site-owner')
             ->with(['sites' => function($query) {
-                $query->orderBy('created_at', 'desc');
+                $query->with('siteInfoMD')->orderBy('created_at', 'desc');
             }])
             ->get();
 
@@ -142,6 +143,7 @@ class AdminDashboardController extends Controller
      */
     public function sitesShow(Site $site)
     {
+        $site->load('siteInfoMD');
         return view('admin.sites.show', compact('site'));
     }
 
@@ -168,7 +170,7 @@ class AdminDashboardController extends Controller
             'url' => $request->url,
         ]);
 
-        return redirect()->route('admin.sites.index')
+        return redirect()->route('admin.sites.show', $site)
             ->with('success', 'Sito aggiornato con successo!');
     }
 
@@ -182,5 +184,32 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.sites.index')
             ->with('success', "Sito di {$siteOwnerName} eliminato con successo!");
+    }
+
+    /**
+     * Show the form for editing site markdown info
+     */
+    public function sitesEditInfo(Site $site)
+    {
+        $siteInfo = $site->siteInfoMD ?? new SiteInfoMD(['site_id' => $site->id]);
+        return view('admin.sites.edit-info', compact('site', 'siteInfo'));
+    }
+
+    /**
+     * Update site markdown info
+     */
+    public function sitesUpdateInfo(Request $request, Site $site)
+    {
+        $request->validate([
+            'markdown_content' => 'nullable|string',
+        ]);
+
+        $siteInfo = $site->siteInfoMD ?? new SiteInfoMD();
+        $siteInfo->site_id = $site->id;
+        $siteInfo->markdown_content = $request->markdown_content;
+        $siteInfo->save();
+
+        return redirect()->route('admin.sites.show', $site)
+            ->with('success', 'Informazioni aziendali aggiornate con successo!');
     }
 }

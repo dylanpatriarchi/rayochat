@@ -84,7 +84,7 @@
 
                 <!-- Actions -->
                 <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('site-owner.dashboard') }}" class="btn-secondary">
+                    <a href="{{ route('site-owner.sites.index') }}" class="btn-secondary">
                         Annulla
                     </a>
                     <button type="submit" class="btn-primary">

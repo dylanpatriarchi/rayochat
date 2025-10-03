@@ -19,11 +19,17 @@
                 </svg>
                 Modifica
             </a>
-            <a href="{{ route('site-owner.dashboard') }}" class="btn-secondary">
+            <a href="{{ route('site-owner.sites.edit-info', $site) }}" class="btn-secondary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Info Aziendali
+            </a>
+            <a href="{{ route('site-owner.sites.index') }}" class="btn-secondary">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Torna alla Dashboard
+                Torna alla Lista
             </a>
         </div>
     </div>
@@ -67,6 +73,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Site Business Information -->
+    @if($site->siteInfoMD && $site->siteInfoMD->html_content)
+    <div class="card">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Informazioni Aziendali</h3>
+            <a href="{{ route('site-owner.sites.edit-info', $site) }}" class="text-orange-600 hover:text-orange-700 text-sm font-medium">
+                Modifica
+            </a>
+        </div>
+        <div class="prose max-w-none">
+            {!! $site->siteInfoMD->html_content !!}
+        </div>
+    </div>
+    @else
+    <div class="card border-gray-200 bg-gray-50">
+        <div class="text-center py-8">
+            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Nessuna informazione aziendale</h3>
+            <p class="text-gray-500 mb-4">Aggiungi informazioni aziendali per il tuo sito</p>
+            <a href="{{ route('site-owner.sites.edit-info', $site) }}" class="btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Aggiungi Informazioni
+            </a>
+        </div>
+    </div>
+    @endif
 
     <!-- API Key Card -->
     <div class="card">

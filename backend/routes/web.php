@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/sites/{site}/edit', [AdminDashboardController::class, 'sitesEdit'])->name('sites.edit');
         Route::put('/sites/{site}', [AdminDashboardController::class, 'sitesUpdate'])->name('sites.update');
         Route::delete('/sites/{site}', [AdminDashboardController::class, 'sitesDestroy'])->name('sites.destroy');
+        
+        // Site info management
+        Route::get('/sites/{site}/edit-info', [AdminDashboardController::class, 'sitesEditInfo'])->name('sites.edit-info');
+        Route::put('/sites/{site}/info', [AdminDashboardController::class, 'sitesUpdateInfo'])->name('sites.update-info');
     });
     
     // Site Owner routes
@@ -48,11 +52,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [SiteOwnerDashboardController::class, 'index'])->name('dashboard');
         
         // Sites management
+        Route::get('/sites', [SiteOwnerDashboardController::class, 'sitesIndex'])->name('sites.index');
         Route::get('/sites/create', [SiteOwnerDashboardController::class, 'create'])->name('sites.create');
         Route::post('/sites', [SiteOwnerDashboardController::class, 'store'])->name('sites.store');
         Route::get('/sites/{site}', [SiteOwnerDashboardController::class, 'show'])->name('sites.show');
         Route::get('/sites/{site}/edit', [SiteOwnerDashboardController::class, 'edit'])->name('sites.edit');
         Route::put('/sites/{site}', [SiteOwnerDashboardController::class, 'update'])->name('sites.update');
         Route::delete('/sites/{site}', [SiteOwnerDashboardController::class, 'destroy'])->name('sites.destroy');
+        
+        // Site info management
+        Route::get('/sites/{site}/edit-info', [SiteOwnerDashboardController::class, 'editInfo'])->name('sites.edit-info');
+        Route::put('/sites/{site}/info', [SiteOwnerDashboardController::class, 'updateInfo'])->name('sites.update-info');
     });
 });
