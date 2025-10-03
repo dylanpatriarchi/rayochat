@@ -51,6 +51,26 @@ services:
     networks:
       - rayochat
 
+  rag:
+    build:
+      context: ./rag
+      dockerfile: Dockerfile
+    container_name: rayochat_rag
+    restart: unless-stopped
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./rag:/app
+      - ./rag/.env:/app/.env
+    networks:
+      - rayochat
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://rayochat:rayochat_password@db:5432/rayochat
+      - REDIS_URL=redis://redis:6379/1
+
 volumes:
   postgres_data:
 

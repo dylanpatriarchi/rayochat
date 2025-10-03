@@ -1,181 +1,220 @@
-# RayoChat Backend
+# RayoChat - AI-Powered Business Chat Platform
 
-A Laravel 12 application with Docker setup, featuring OTP-based authentication and role-based access control.
+A comprehensive platform that combines Laravel backend management with an intelligent RAG (Retrieval-Augmented Generation) service for AI-powered customer support.
 
-## Features
+## 🏗️ System Architecture
 
-- **Laravel 12** with PHP 8.3
-- **PostgreSQL** database
-- **Redis** for caching
-- **Docker Compose** setup
-- **OTP Authentication** (no passwords)
-- **Role-based Access Control** using Spatie Laravel Permission
-- **Stripe-inspired Design** with Poppins font
-- **SMTP Zoho** integration for email
+RayoChat consists of three main components:
 
-## Quick Start
+1. **Laravel Backend** - Admin dashboard and site management
+2. **RAG Service** - AI-powered chat service using OpenAI and LangChain
+3. **Docker Infrastructure** - Containerized deployment with PostgreSQL and Redis
 
-1. **Clone and navigate to the project:**
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Laravel App   │    │   RAG Service   │    │   Client Sites  │
+│   (Port 8001)   │    │   (Port 8002)   │    │                 │
+│                 │    │                 │    │                 │
+│ • Admin Panel   │    │ • OpenAI API    │◄───┤ • Chat Widget   │
+│ • Site Mgmt     │    │ • LangChain     │    │ • API Calls     │
+│ • User Roles    │    │ • Vector Store  │    │                 │
+│ • API Keys      │    │ • Rate Limiting │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │
+         └───────────────────────┼─────────────────────────────────┐
+                                 │                                 │
+                    ┌─────────────────┐              ┌─────────────────┐
+                    │   PostgreSQL    │              │     Redis       │
+                    │                 │              │                 │
+                    │ • Sites Data    │              │ • Caching       │
+                    │ • Users         │              │ • Rate Limits   │
+                    │ • Business Info │              │ • Sessions      │
+                    └─────────────────┘              └─────────────────┘
+```
+
+## 🚀 Quick Start
+
+1. **Clone the repository:**
    ```bash
+   git clone <repository-url>
    cd rayochat
    ```
 
-2. **Start the Docker containers:**
+2. **Start all services:**
    ```bash
    docker compose up -d
    ```
 
-3. **Access the application:**
-   - Open http://localhost:8001 in your browser
-   - You'll be redirected to the login page
+3. **Configure OpenAI API key:**
+   ```bash
+   # Edit rag/.env
+   OPENAI_API_KEY=sk-your-openai-key-here
+   docker compose restart rag
+   ```
 
-## Default Users
+4. **Access the services:**
+   - Laravel Admin: http://localhost:8001
+   - RAG Service: http://localhost:8002/health
 
-The application comes with two pre-configured users:
+## 📋 Features
 
-- **Admin User:**
-  - Email: `info@rayo.consulting`
-  - Role: `admin`
-  - Permissions: All permissions
+### Laravel Backend
+- **OTP Authentication** - Passwordless login system
+- **Role-based Access Control** - Admin and Site Owner roles
+- **Site Management** - Create and manage client sites
+- **Business Information Editor** - Markdown editor for company info
+- **API Key Generation** - Automatic API key creation for sites
 
-- **Site Owner:**
-  - Email: `owner@rayo.consulting`
-  - Role: `site-owner`
-  - Permissions: View reports only
+### RAG Service
+- **AI-Powered Responses** - OpenAI GPT integration
+- **Vector Search** - ChromaDB for semantic search
+- **Rate Limiting** - 30 requests/minute, 500/hour
+- **Caching** - Redis-based response caching
+- **Security** - Input validation, SQL injection protection
+- **Monitoring** - Health checks and usage tracking
 
-## Authentication Flow
+## 🔧 Configuration
 
-1. Enter your email address on the login page
-2. Click "Send OTP Code"
-3. Check your email for the 6-digit OTP code
-4. Enter the OTP code on the verification page
-5. You'll be logged in and redirected to the dashboard
+### Environment Files
 
-## SMTP Configuration
-
-To enable email sending, update the following in `backend/.env`:
-
+**Backend (.env):**
 ```env
+APP_NAME=RayoChat
+DB_CONNECTION=pgsql
+DB_HOST=db
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.zoho.eu
-MAIL_PORT=587
-MAIL_USERNAME=your-email@zoho.com
-MAIL_PASSWORD=your-app-password
-MAIL_FROM_ADDRESS="your-email@zoho.com"
 ```
 
-## Docker Services
+**RAG Service (.env):**
+```env
+DATABASE_URL=postgresql://rayochat:rayochat_password@db:5432/rayochat
+OPENAI_API_KEY=sk-your-key-here
+REDIS_URL=redis://redis:6379/1
+```
 
-- **App:** Laravel application (PHP 8.3-FPM)
-- **Nginx:** Web server (Port 8001)
-- **PostgreSQL:** Database
-- **Redis:** Cache and sessions
+## 🔑 Default Users
 
-## Project Structure
+- **Admin:** `info@rayo.consulting` (Full access)
+- **Site Owner:** `owner@rayo.consulting` (Site management)
+
+## 🛡️ Security Features
+
+- **Input Sanitization** - XSS and injection prevention
+- **API Key Validation** - Secure site authentication
+- **Rate Limiting** - DDoS protection
+- **CORS Configuration** - Cross-origin security
+- **Security Headers** - XSS, clickjacking protection
+- **SSL/TLS Support** - Encrypted connections
+
+## 📊 Usage Example
+
+### Creating a Site
+1. Login to Laravel admin panel
+2. Navigate to "Site Management"
+3. Create new site with business information
+4. Copy the generated API key
+
+### Using the Chat API
+```javascript
+const response = await fetch('http://localhost:8002/ask', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: "What services do you offer?",
+    api_key: "rc_s_xxxxxxxxxxxxxxxxxxxxx"
+  })
+});
+```
+
+## 🐳 Docker Services
+
+- **app** - Laravel PHP-FPM application
+- **nginx** - Web server (Port 8001)
+- **db** - PostgreSQL database
+- **redis** - Cache and session storage
+- **rag** - Python RAG service (Port 8002)
+
+## 📁 Project Structure
 
 ```
 rayochat/
 ├── backend/                 # Laravel application
 │   ├── app/
 │   │   ├── Http/Controllers/
-│   │   │   ├── Auth/OtpController.php
-│   │   │   └── DashboardController.php
-│   │   └── Models/User.php
+│   │   ├── Models/
+│   │   └── Services/
 │   ├── resources/views/
-│   │   ├── layouts/app.blade.php
-│   │   ├── auth/
-│   │   │   ├── login.blade.php
-│   │   │   └── verify-otp.blade.php
-│   │   └── dashboard.blade.php
-│   └── routes/web.php
-├── docker/
-│   ├── nginx/default.conf
-│   └── php/local.ini
+│   └── routes/
+├── rag/                     # Python RAG service
+│   ├── app/
+│   │   ├── models/
+│   │   ├── services/
+│   │   └── main.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── docker/                  # Docker configuration
+│   ├── nginx/
+│   └── php/
 ├── docker-compose.yml
-└── Dockerfile
+└── README.md
 ```
 
-## Development
+## 🔧 Development
 
 ### Running Commands
-
-To run Laravel commands inside the Docker container:
-
 ```bash
-docker exec rayochat_app php artisan [command]
+# Laravel commands
+docker compose exec app php artisan migrate
+docker compose exec app php artisan tinker
+
+# RAG service logs
+docker logs rayochat_rag
+
+# Database access
+docker compose exec db psql -U rayochat -d rayochat
 ```
 
-### Database Migrations
-
+### Testing the RAG Service
 ```bash
-docker exec rayochat_app php artisan migrate
+curl -X POST http://localhost:8002/ask \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello", "api_key": "rc_s_xxxxx"}'
 ```
 
-### Seeding
+## 🚨 Troubleshooting
 
+### Common Issues
+- **Port conflicts:** Modify ports in docker-compose.yml
+- **Database connection:** Run `docker compose down -v && docker compose up -d`
+- **RAG service errors:** Check OpenAI API key configuration
+- **Email issues:** Verify SMTP settings in backend/.env
+
+### Health Checks
+- Laravel: http://localhost:8001
+- RAG Service: http://localhost:8002/health
+- Database: `docker compose exec db pg_isready`
+
+## 📈 Monitoring
+
+- **Application Logs:** `docker compose logs -f`
+- **RAG Usage:** Check Redis for usage statistics
+- **Database Performance:** Monitor PostgreSQL logs
+- **API Response Times:** Built-in FastAPI metrics
+
+## 🔄 Updates
+
+To update the system:
 ```bash
-docker exec rayochat_app php artisan db:seed --class=RoleSeeder
-```
-
-## Design System
-
-The application uses a Stripe-inspired design with:
-
-- **Colors:** White background with orange accents (#ff6b35)
-- **Typography:** Poppins font family
-- **Components:** Clean cards, gradients, and modern UI elements
-- **Responsive:** Mobile-first design approach
-
-## Security Features
-
-- OTP-based authentication (no password storage)
-- CSRF protection
-- Role-based access control
-- Secure session management
-- Input validation and sanitization
-
-## Environment Variables
-
-Key environment variables in `backend/.env`:
-
-```env
-APP_NAME=RayoChat
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8001
-
-DB_CONNECTION=pgsql
-DB_HOST=db
-DB_PORT=5432
-DB_DATABASE=rayochat
-DB_USERNAME=rayochat
-DB_PASSWORD=rayochat_password
-
-REDIS_HOST=redis
-REDIS_PORT=6379
-```
-
-## Troubleshooting
-
-### Database Connection Issues
-If you encounter database connection issues:
-```bash
-docker compose down -v
+git pull
+docker compose build
 docker compose up -d
 ```
 
-### Port Conflicts
-If port 8001 is already in use, modify `docker-compose.yml`:
-```yaml
-ports:
-  - "8002:80"  # Change 8001 to 8002
-```
+## 📞 Support
 
-### Email Not Sending
-- Verify SMTP credentials in `.env`
-- Check Zoho app password settings
-- For testing, OTP codes are logged in Laravel logs
+For technical support or questions about the RayoChat platform, please refer to the individual service documentation in their respective directories.
 
-## License
+## 📄 License
 
-This project is proprietary software.
+This project is proprietary software. See LICENSE.md for details.
