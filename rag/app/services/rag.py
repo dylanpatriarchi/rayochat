@@ -30,13 +30,13 @@ class RAGService:
             logger.warning(f"Redis not available: {str(e)}")
             self.redis_client = None
     
-    def process_message(self, request: ChatRequest) -> Dict[str, Any]:
+    def process_message(self, request: ChatRequest, api_key: str) -> Dict[str, Any]:
         """
         Process incoming message and generate response
         """
         try:
             # Validate API key
-            is_valid, site_data, error = self.auth_service.validate_api_key(request.api_key)
+            is_valid, site_data, error = self.auth_service.validate_api_key(api_key)
             
             if not is_valid:
                 return {
@@ -52,7 +52,7 @@ class RAGService:
                 }
             
             # Check rate limiting
-            if self.is_rate_limited(request.api_key):
+            if self.is_rate_limited(api_key):
                 return {
                     "success": False,
                     "error": "Rate limit exceeded. Please try again later."
@@ -87,7 +87,7 @@ class RAGService:
             self.cache_response(site_id, request.message, response_data)
             
             # Track usage
-            self.track_usage(request.api_key, response_data.get("tokens_used", {}))
+            self.track_usage(api_key, response_data.get("tokens_used", {}))
             
             # Log conversation
             self.log_conversation(

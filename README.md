@@ -4,25 +4,26 @@ A comprehensive platform that combines Laravel backend management with an intell
 
 ## 🏗️ System Architecture
 
-RayoChat consists of three main components:
+RayoChat consists of four main components:
 
 1. **Laravel Backend** - Admin dashboard and site management
 2. **RAG Service** - AI-powered chat service using OpenAI and LangChain
-3. **Docker Infrastructure** - Containerized deployment with PostgreSQL and Redis
+3. **WordPress Plugin** - Chat widget for client websites
+4. **Docker Infrastructure** - Containerized deployment with PostgreSQL and Redis
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Laravel App   │    │   RAG Service   │    │   Client Sites  │
+│   Laravel App   │    │   RAG Service   │    │ WordPress Plugin│
 │   (Port 8001)   │    │   (Port 8002)   │    │                 │
 │                 │    │                 │    │                 │
 │ • Admin Panel   │    │ • OpenAI API    │◄───┤ • Chat Widget   │
-│ • Site Mgmt     │    │ • LangChain     │    │ • API Calls     │
-│ • User Roles    │    │ • Vector Store  │    │                 │
-│ • API Keys      │    │ • Rate Limiting │    │                 │
+│ • Site Mgmt     │    │ • LangChain     │    │ • iMessage UI   │
+│ • User Roles    │    │ • Vector Store  │    │ • API Client    │
+│ • API Keys      │    │ • Rate Limiting │    │ • WhatsApp Icon │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │
-         └───────────────────────┼─────────────────────────────────┐
-                                 │                                 │
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
                     ┌─────────────────┐              ┌─────────────────┐
                     │   PostgreSQL    │              │     Redis       │
                     │                 │              │                 │
@@ -153,12 +154,40 @@ rayochat/
 │   │   └── main.py
 │   ├── requirements.txt
 │   └── Dockerfile
+├── wordpress-plugin/        # WordPress integration
+│   └── rayochat-widget/     # Chat widget plugin
+│       ├── assets/          # CSS and JavaScript
+│       ├── rayochat-widget.php  # Main plugin file
+│       └── README.md        # Plugin documentation
 ├── docker/                  # Docker configuration
 │   ├── nginx/
 │   └── php/
 ├── docker-compose.yml
 └── README.md
 ```
+
+## 🔌 WordPress Plugin
+
+### Chat Widget Features
+- **iMessage-style UI** - Modern, familiar interface
+- **WhatsApp-style button** - Green floating action button
+- **Real-time chat** - Instant AI responses
+- **Mobile responsive** - Optimized for all devices
+- **Customizable** - Colors, position, messages
+- **Secure** - XSS protection, input validation
+
+### Installation
+1. Copy plugin to WordPress: `wp-content/plugins/rayochat-widget/`
+2. Activate plugin in WordPress Admin
+3. Configure API key in Settings > RayoChat Widget
+4. Customize appearance and messages
+
+### Configuration
+- **API Key**: Get from RayoChat admin panel (format: `rc_s_...`)
+- **Widget Title**: Displayed in chat header
+- **Welcome Message**: First message shown to users
+- **Position**: Bottom right or left
+- **Color**: Button color (default: WhatsApp green)
 
 ## 🔧 Development
 
@@ -173,6 +202,10 @@ docker logs rayochat_rag
 
 # Database access
 docker compose exec db psql -U rayochat -d rayochat
+
+# WordPress plugin development
+cd wordpress-plugin/rayochat-widget/
+# Edit files and test on WordPress site
 ```
 
 ### Testing the RAG Service

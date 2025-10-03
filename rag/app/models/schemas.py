@@ -8,7 +8,6 @@ from datetime import datetime
 class ChatRequest(BaseModel):
     """Chat request schema"""
     message: str = Field(..., min_length=1, max_length=1000, description="User message")
-    api_key: str = Field(..., description="Site API key")
     conversation_id: Optional[str] = Field(None, description="Conversation ID for context")
     
     @validator('message')
@@ -39,19 +38,6 @@ class ChatRequest(BaseModel):
         for pattern in suspicious_patterns:
             if re.search(pattern, v, re.IGNORECASE):
                 raise ValueError("Message contains potentially unsafe content")
-        
-        return v
-    
-    @validator('api_key')
-    def validate_api_key(cls, v):
-        """Validate API key format"""
-        import re
-        if not v:
-            raise ValueError("API key is required")
-        
-        # Must start with rc_s_ and contain only alphanumeric characters
-        if not re.match(r'^rc_s_[a-zA-Z0-9]{32}$', v):
-            raise ValueError("Invalid API key format")
         
         return v
 

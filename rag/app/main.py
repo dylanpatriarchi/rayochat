@@ -13,6 +13,7 @@ from starlette.responses import Response
 from app.config import settings
 from app.models.schemas import ChatRequest, ChatResponse, ErrorResponse
 from app.services.rag import RAGService
+from app.utils.auth import extract_api_key
 import logging
 import uvicorn
 from datetime import datetime
@@ -127,14 +128,21 @@ async def health_check():
 
 @app.post("/ask")
 @limiter.limit(f"{settings.RATE_LIMIT_PER_MINUTE}/minute")
-async def ask_question(request: Request, chat_request: ChatRequest):
+async def ask_question(
+    request: Request, 
+    chat_request: ChatRequest,
+    api_key: str = Depends(extract_api_key)
+):
     """
     Main endpoint for processing chat messages
     
+    Expected Headers:
+    - Authorization: Bearer rc_s_xxxxx
+    - OR X-API-Key: rc_s_xxxxx
+    
     Expected POST body:
     {
-        "message": "User's question",
-        "api_key": "rc_s_xxxxx"
+        "message": "User's question"
     }
     
     Returns:
@@ -153,7 +161,7 @@ async def ask_question(request: Request, chat_request: ChatRequest):
         logger.info(f"Received request from {get_remote_address(request)}")
         
         # Process the message
-        result = rag_service.process_message(chat_request)
+        result = rag_service.process_message(chat_request, api_key)
         
         if not result["success"]:
             raise HTTPException(
@@ -181,32 +189,33 @@ async def ask_question(request: Request, chat_request: ChatRequest):
 
 @app.post("/webhook")
 @limiter.limit(f"{settings.RATE_LIMIT_PER_MINUTE}/minute")
-async def webhook_handler(request: Request):
+async def webhook_handler(
+    request: Request,
+    api_key: str = Depends(extract_api_key)
+):
     """
     Alternative webhook endpoint that accepts raw JSON
     """
     try:
         body = await request.json()
         
-        # Extract message and API key from body
+        # Extract message from body (API key comes from header)
         message = body.get("message")
-        api_key = body.get("api_key")
         
-        if not message or not api_key:
+        if not message:
             raise HTTPException(
                 status_code=400,
-                detail="Missing required fields: message and api_key"
+                detail="Missing required field: message"
             )
         
         # Create ChatRequest
         chat_request = ChatRequest(
             message=message,
-            api_key=api_key,
             conversation_id=body.get("conversation_id")
         )
         
         # Process the message
-        result = rag_service.process_message(chat_request)
+        result = rag_service.process_message(chat_request, api_key)
         
         if not result["success"]:
             raise HTTPException(

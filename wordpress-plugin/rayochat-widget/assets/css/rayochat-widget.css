@@ -1,0 +1,423 @@
+/**
+ * RayoChat Widget CSS
+ * Modern chat widget with iMessage-style design
+ */
+
+/* Widget Container */
+#rayochat-widget {
+    position: fixed;
+    z-index: 999999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+#rayochat-widget.rayochat-widget-bottom-right {
+    bottom: 20px;
+    right: 20px;
+}
+
+#rayochat-widget.rayochat-widget-bottom-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+/* Chat Toggle Button */
+.rayochat-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #25D366;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.rayochat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.rayochat-toggle:active {
+    transform: scale(0.95);
+}
+
+.rayochat-toggle svg {
+    transition: all 0.3s ease;
+}
+
+/* Chat Window */
+.rayochat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 380px;
+    height: 500px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.rayochat-window.rayochat-window-open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+#rayochat-widget.rayochat-widget-bottom-left .rayochat-window {
+    right: auto;
+    left: 0;
+}
+
+/* Chat Header */
+.rayochat-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 16px 16px 0 0;
+}
+
+.rayochat-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rayochat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.rayochat-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0;
+}
+
+.rayochat-status {
+    font-size: 12px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.rayochat-minimize {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rayochat-minimize:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Messages Container */
+.rayochat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+
+.rayochat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.rayochat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.rayochat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 2px;
+}
+
+/* Message Bubbles */
+.rayochat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rayochat-message-user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.rayochat-message-bot {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.rayochat-message-content {
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.rayochat-message-user .rayochat-message-content {
+    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    color: white;
+    border-bottom-right-radius: 6px;
+}
+
+.rayochat-message-bot .rayochat-message-content {
+    background: white;
+    color: #2d3748;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.rayochat-message-time {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+
+/* Typing Indicator */
+.rayochat-typing {
+    padding: 0 20px 10px;
+    background: #f8f9fa;
+}
+
+.rayochat-typing-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    max-width: fit-content;
+}
+
+.rayochat-typing-dots {
+    display: flex;
+    gap: 3px;
+}
+
+.rayochat-typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    animation: typingDots 1.4s infinite ease-in-out;
+}
+
+.rayochat-typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.rayochat-typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingDots {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.rayochat-typing-text {
+    font-size: 12px;
+    color: #718096;
+}
+
+/* Input Container */
+.rayochat-input-container {
+    padding: 16px 20px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.rayochat-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f7fafc;
+    border-radius: 24px;
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    transition: border-color 0.2s ease;
+}
+
+.rayochat-input-wrapper:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#rayochat-input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 14px;
+    color: #2d3748;
+    padding: 8px 0;
+}
+
+#rayochat-input::placeholder {
+    color: #a0aec0;
+}
+
+.rayochat-send-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.rayochat-send-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.rayochat-send-btn:active {
+    transform: scale(0.95);
+}
+
+.rayochat-send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    #rayochat-widget.rayochat-widget-bottom-right,
+    #rayochat-widget.rayochat-widget-bottom-left {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .rayochat-window {
+        width: calc(100vw - 20px);
+        height: 70vh;
+        max-height: 500px;
+        bottom: 80px;
+        right: 0;
+        left: 0;
+    }
+    
+    .rayochat-toggle {
+        width: 56px;
+        height: 56px;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Loading State */
+.rayochat-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.rayochat-loading .rayochat-send-btn {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.rayochat-error {
+    background: #fed7d7 !important;
+    color: #c53030 !important;
+    border-color: #feb2b2 !important;
+}
+
+/* Success Animation */
+.rayochat-success {
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Accessibility */
+.rayochat-toggle:focus,
+.rayochat-minimize:focus,
+.rayochat-send-btn:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .rayochat-window {
+        border: 2px solid #000;
+    }
+    
+    .rayochat-message-content {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
