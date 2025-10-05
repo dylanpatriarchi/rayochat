@@ -84,5 +84,13 @@ Route::middleware('auth')->group(function () {
         // Site info management
         Route::get('/sites/{site}/edit-info', [SiteOwnerDashboardController::class, 'editInfo'])->name('sites.edit-info');
         Route::put('/sites/{site}/info', [SiteOwnerDashboardController::class, 'updateInfo'])->name('sites.update-info');
+        
+        // Profile management
+        Route::get('/profile', [SiteOwnerDashboardController::class, 'profile'])->name('profile');
+        Route::put('/profile', [SiteOwnerDashboardController::class, 'profileUpdate'])->name('profile.update');
+        
+        // Analytics
+        Route::get('/analytics', [SiteOwnerDashboardController::class, 'analyticsIndex'])->name('analytics.index');
+        Route::get('/analytics/site/{site}', [SiteOwnerDashboardController::class, 'siteAnalytics'])->name('analytics.site');
     });
 });
