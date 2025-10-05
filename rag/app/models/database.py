@@ -1,7 +1,7 @@
 """
 Database models and connection
 """
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, Numeric, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, Session
 from sqlalchemy.pool import StaticPool
@@ -72,6 +72,22 @@ class SiteInfoMD(Base):
     # Relationships
     site = relationship("Site", back_populates="site_info")
 
+class Analytics(Base):
+    """Analytics model matching Laravel's analytics table"""
+    __tablename__ = "analytics"
+
+    id = Column(Integer, primary_key=True)
+    site_id = Column(Integer, ForeignKey("sites.id"))
+    message = Column(Text)
+    category = Column(String(255))
+    confidence = Column(Numeric(5, 4))
+    classification_data = Column(JSON)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+    # Relationships
+    site = relationship("Site")
+
 def get_db() -> Session:
     """Get database session"""
     db = SessionLocal()
@@ -109,5 +125,35 @@ def get_site_with_info(api_key: str):
             
             return site_data
         return None
+    finally:
+        db.close()
+
+def save_analytics(site_id: int, message: str):
+    """Save analytics data to database with ML classification"""
+    db = SessionLocal()
+    try:
+        from datetime import datetime
+        from app.services.message_classifier import classify_message
+        
+        # Classify the message
+        classification = classify_message(message)
+
+        analytics = Analytics(
+            site_id=site_id,
+            message=message,
+            category=classification['category'],
+            confidence=classification['confidence'],
+            classification_data=classification,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
+        )
+
+        db.add(analytics)
+        db.commit()
+        logger.info(f"Analytics saved for site {site_id} - Category: {classification['category']} (confidence: {classification['confidence']})")
+
+    except Exception as e:
+        logger.error(f"Error saving analytics: {str(e)}")
+        db.rollback()
     finally:
         db.close()

@@ -45,7 +45,7 @@ class RoleSeeder extends Seeder
         // Create site-owner user
         $siteOwnerUser = User::create([
             'name' => 'Site Owner',
-            'email' => 'owner@rayo.consulting',
+            'email' => 'dylanpatri04@gmail.com',
         ]);
 
         $siteOwnerUser->assignRole('site-owner');

@@ -24,9 +24,26 @@ Route::middleware('auth')->group(function () {
     
     // Admin routes
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+        // Admin dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         
-        // Site Owners management
+        // Users management (new unified interface)
+        Route::get('/users', [AdminDashboardController::class, 'usersIndex'])->name('users.index');
+        Route::get('/users/create', [AdminDashboardController::class, 'usersCreate'])->name('users.create');
+        Route::post('/users', [AdminDashboardController::class, 'usersStore'])->name('users.store');
+        Route::get('/users/{user}/edit', [AdminDashboardController::class, 'usersEdit'])->name('users.edit');
+        Route::put('/users/{user}', [AdminDashboardController::class, 'usersUpdate'])->name('users.update');
+        Route::delete('/users/{user}', [AdminDashboardController::class, 'usersDestroy'])->name('users.destroy');
+        
+        // Admin Profile management
+        Route::get('/profile', [AdminDashboardController::class, 'profile'])->name('profile');
+        Route::put('/profile', [AdminDashboardController::class, 'profileUpdate'])->name('profile.update');
+        
+        // Analytics management
+        Route::get('/analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+        Route::get('/analytics/site/{site}', [\App\Http\Controllers\Admin\AnalyticsController::class, 'site'])->name('analytics.site');
+        
+        // Site Owners management (legacy routes for existing views)
         Route::get('/site-owners', [AdminDashboardController::class, 'siteOwnersIndex'])->name('site-owners.index');
         Route::get('/site-owners/create', [AdminDashboardController::class, 'siteOwnersCreate'])->name('site-owners.create');
         Route::post('/site-owners', [AdminDashboardController::class, 'siteOwnersStore'])->name('site-owners.store');
@@ -35,7 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/site-owners/{siteOwner}', [AdminDashboardController::class, 'siteOwnersUpdate'])->name('site-owners.update');
         Route::delete('/site-owners/{siteOwner}', [AdminDashboardController::class, 'siteOwnersDestroy'])->name('site-owners.destroy');
         
-        // Sites management
+        // Sites management (keep existing routes for actions from accordion)
         Route::get('/sites', [AdminDashboardController::class, 'sitesIndex'])->name('sites.index');
         Route::get('/sites/{site}', [AdminDashboardController::class, 'sitesShow'])->name('sites.show');
         Route::get('/sites/{site}/edit', [AdminDashboardController::class, 'sitesEdit'])->name('sites.edit');
@@ -45,6 +62,10 @@ Route::middleware('auth')->group(function () {
         // Site info management
         Route::get('/sites/{site}/edit-info', [AdminDashboardController::class, 'sitesEditInfo'])->name('sites.edit-info');
         Route::put('/sites/{site}/info', [AdminDashboardController::class, 'sitesUpdateInfo'])->name('sites.update-info');
+        
+        // Analytics
+        Route::get('/analytics', [AdminDashboardController::class, 'analyticsIndex'])->name('analytics.index');
+        Route::get('/analytics/site/{site}', [AdminDashboardController::class, 'siteAnalytics'])->name('analytics.site');
     });
     
     // Site Owner routes

@@ -97,6 +97,9 @@ class RAGService:
                 tokens=response_data.get("tokens_used", {})
             )
             
+            # Save analytics to database
+            self.save_analytics_to_db(site_id, request.message)
+            
             return {
                 "success": True,
                 "message": "Response generated successfully",
@@ -222,3 +225,13 @@ class RAGService:
             # TODO: Save to database if needed for analytics
         except Exception as e:
             logger.error(f"Error logging conversation: {str(e)}")
+    
+    def save_analytics_to_db(self, site_id: int, message: str):
+        """
+        Save analytics data to Laravel database
+        """
+        try:
+            from app.models.database import save_analytics
+            save_analytics(site_id, message)
+        except Exception as e:
+            logger.error(f"Error saving analytics to database: {str(e)}")

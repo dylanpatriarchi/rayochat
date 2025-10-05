@@ -110,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Backspace
             if (e.key === 'Backspace') {
                 if (!e.target.value && index > 0) {
-                    // Se l'input è vuoto, vai al precedente
+                    // If input is empty, go to previous
                     otpDigits[index - 1].focus();
                 } else {
-                    // Rimuovi il valore corrente
+                    // Remove current value
                     e.target.value = '';
                     e.target.classList.remove('filled');
                 }

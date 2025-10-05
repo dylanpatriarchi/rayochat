@@ -13,7 +13,7 @@
             <p class="text-sm text-gray-500 mt-1">Modifica le informazioni aziendali</p>
         </div>
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.sites.show', $site) }}" class="btn-secondary">
+            <a href="{{ route('admin.users.index') }}" class="btn-secondary">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -112,7 +112,7 @@ La nostra azienda è leader nel settore...
 
             <!-- Actions -->
             <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                <a href="{{ route('admin.sites.show', $site) }}" class="btn-secondary">
+                <a href="{{ route('admin.users.index') }}" class="btn-secondary">
                     Annulla
                 </a>
                 <button type="submit" class="btn-primary">

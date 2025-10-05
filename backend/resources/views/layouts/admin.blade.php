@@ -172,6 +172,56 @@
         .hover\:text-gray-700:hover { color: #374151; }
         .inline { display: inline; }
         .inline-flex { display: inline-flex; }
+        
+        /* Accordion Styles */
+        .accordion-header {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-header:hover {
+            background-color: #f3f4f6;
+        }
+        .accordion-header.active {
+            background-color: #fed7aa;
+            border-color: #f97316;
+        }
+        .accordion-content {
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding: 1rem;
+            background-color: white;
+        }
+        .accordion-arrow {
+            transition: transform 0.2s ease;
+        }
+        .accordion-arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .site-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .site-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -196,21 +246,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"/>
                         </svg>
-                        Dashboard
+                        DASHBOARD
                     </a>
                     
-                    <a href="{{ route('admin.site-owners.index') }}" class="sidebar-item {{ request()->routeIs('admin.site-owners.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.index') }}" class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
                         </svg>
-                        Site Owners
+                        UTENTI
                     </a>
                     
-                    <a href="{{ route('admin.sites.index') }}" class="sidebar-item {{ request()->routeIs('admin.sites.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.analytics.index') }}" class="sidebar-item {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
-                        Siti
+                        ANALYTICS
                     </a>
                 </div>
             </nav>
@@ -233,15 +283,15 @@
                                 <p class="text-xs text-gray-500">{{ auth()->user()->getRoleNames()->first() }}</p>
                             </div>
                             
-                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                            <a href="{{ route('admin.profile') }}" class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center hover:bg-orange-200 transition-colors {{ request()->routeIs('admin.profile.*') ? 'bg-orange-200' : '' }}" title="Il Mio Profilo">
                                 <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                                 </svg>
-                            </div>
+                            </a>
                             
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                                <button type="submit" class="text-sm text-gray-500 hover:text-gray-700 transition-colors" title="Logout">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                     </svg>
@@ -267,6 +317,17 @@
                         </div>
                     @endif
 
+                    @if(session('info'))
+                        <div class="mb-6 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ session('info') }}
+                            </div>
+                        </div>
+                    @endif
+
                     @yield('content')
                 </div>
             </main>
@@ -288,5 +349,31 @@
             </footer>
         </div>
     </div>
+    
+    <script>
+        // Accordion functionality
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.accordion-arrow');
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                element.classList.add('active');
+                arrow.classList.add('rotated');
+            } else {
+                content.style.display = 'none';
+                element.classList.remove('active');
+                arrow.classList.remove('rotated');
+            }
+        }
+        
+        // Initialize accordions (all closed by default)
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionContents = document.querySelectorAll('.accordion-content');
+            accordionContents.forEach(content => {
+                content.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 </html>

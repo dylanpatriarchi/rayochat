@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Site extends Model
@@ -38,5 +39,13 @@ class Site extends Model
     public function siteInfoMD(): HasOne
     {
         return $this->hasOne(SiteInfoMD::class);
+    }
+
+    /**
+     * Get all analytics records for this site
+     */
+    public function analytics(): HasMany
+    {
+        return $this->hasMany(Analytics::class);
     }
 }
