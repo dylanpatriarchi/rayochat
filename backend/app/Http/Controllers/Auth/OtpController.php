@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,14 +55,11 @@ class OtpController extends Controller
         // Store session token in session for validation
         session(['otp_session_token' => $otpSessionToken]);
 
-        // Send OTP email (placeholder - will be configured with Zoho SMTP)
+        // Send OTP email with custom template
         try {
-            Mail::raw("Il tuo codice OTP è: {$otpCode}. Questo codice scadrà in 10 minuti.", function ($message) use ($user) {
-                $message->to($user->email)
-                        ->subject('Il tuo codice OTP per il login');
-            });
+            Mail::to($user->email)->send(new OtpMail($user, $otpCode, 10));
         } catch (\Exception $e) {
-            \Log::info("Failed auth.");
+            \Log::error("Failed to send OTP email: " . $e->getMessage());
         }
 
         return redirect()->route('otp.verify')->with('email', $user->email)->with('success', 'OTP inviato alla tua email.');
