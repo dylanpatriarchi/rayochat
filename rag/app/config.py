@@ -41,6 +41,23 @@ class Settings(BaseSettings):
     CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "1000"))
     CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "200"))
     
+    # Guardrails Configuration
+    GUARDRAILS_ENABLED: bool = os.getenv("GUARDRAILS_ENABLED", "True").lower() == "true"
+    GUARDRAILS_STRICT_MODE: bool = os.getenv("GUARDRAILS_STRICT_MODE", "False").lower() == "true"
+    MAX_INPUT_LENGTH: int = int(os.getenv("MAX_INPUT_LENGTH", "2000"))
+    MIN_INPUT_LENGTH: int = int(os.getenv("MIN_INPUT_LENGTH", "3"))
+    MAX_OUTPUT_LENGTH: int = int(os.getenv("MAX_OUTPUT_LENGTH", "1500"))
+    MIN_OUTPUT_LENGTH: int = int(os.getenv("MIN_OUTPUT_LENGTH", "10"))
+    
+    # Guardrails Sensitivity Levels (low, medium, high)
+    INPUT_GUARDRAILS_SENSITIVITY: str = os.getenv("INPUT_GUARDRAILS_SENSITIVITY", "medium")
+    OUTPUT_GUARDRAILS_SENSITIVITY: str = os.getenv("OUTPUT_GUARDRAILS_SENSITIVITY", "medium")
+    
+    # Content Filtering
+    BLOCK_INAPPROPRIATE_CONTENT: bool = os.getenv("BLOCK_INAPPROPRIATE_CONTENT", "True").lower() == "true"
+    BLOCK_DANGEROUS_PATTERNS: bool = os.getenv("BLOCK_DANGEROUS_PATTERNS", "True").lower() == "true"
+    REQUIRE_BUSINESS_RELEVANCE: bool = os.getenv("REQUIRE_BUSINESS_RELEVANCE", "False").lower() == "true"
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

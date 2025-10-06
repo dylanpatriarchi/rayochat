@@ -3,7 +3,9 @@ RAG (Retrieval-Augmented Generation) service
 """
 from app.services.openai_service import OpenAIService
 from app.services.auth import AuthService
+from app.services.guardrails import GuardrailsService
 from app.models.schemas import ChatRequest, ChatResponse, ErrorResponse
+from app.config import settings
 from typing import Dict, Any, Optional
 import logging
 import redis
@@ -20,9 +22,16 @@ class RAGService:
         self.openai_service = OpenAIService()
         self.auth_service = AuthService()
         
+        # Initialize Guardrails service
+        if settings.GUARDRAILS_ENABLED:
+            self.guardrails_service = GuardrailsService()
+            logger.info("Guardrails service initialized")
+        else:
+            self.guardrails_service = None
+            logger.warning("Guardrails service disabled")
+        
         # Initialize Redis for caching and rate limiting
         try:
-            from app.config import settings
             self.redis_client = redis.from_url(settings.REDIS_URL)
             self.redis_client.ping()
             logger.info("Redis connection established")
@@ -50,6 +59,22 @@ class RAGService:
                     "success": False,
                     "error": error
                 }
+            
+            # INPUT GUARDRAILS - Validate incoming message
+            if self.guardrails_service:
+                site_id = site_data['id']
+                input_valid, input_error, input_metadata = self.guardrails_service.validate_input(
+                    request.message, site_id
+                )
+                
+                if not input_valid:
+                    logger.warning(f"Input guardrail violation for site {site_id}: {input_error}")
+                    return {
+                        "success": False,
+                        "error": "Your message could not be processed due to content policy violations.",
+                        "details": input_error if settings.DEBUG else None,
+                        "guardrail_metadata": input_metadata if settings.DEBUG else None
+                    }
             
             # Check rate limiting
             if self.is_rate_limited(api_key):
@@ -82,6 +107,39 @@ class RAGService:
                 site_name=site_name,
                 site_url=site_url
             )
+            
+            # OUTPUT GUARDRAILS - Validate generated response
+            if self.guardrails_service:
+                output_valid, output_error, output_metadata = self.guardrails_service.validate_output(
+                    response_data["response"], site_id, request.message
+                )
+                
+                if not output_valid:
+                    logger.warning(f"Output guardrail violation for site {site_id}: {output_error}")
+                    
+                    # In case of output violation, return a safe fallback response
+                    fallback_response = self._generate_fallback_response(site_name, request.message)
+                    response_data = {
+                        "response": fallback_response,
+                        "confidence": 0.5,
+                        "sources": ["fallback"],
+                        "tokens_used": {"prompt": 0, "completion": 0, "total": 0},
+                        "guardrail_fallback": True
+                    }
+                    
+                    # Validate fallback response too
+                    fallback_valid, _, _ = self.guardrails_service.validate_output(
+                        fallback_response, site_id, request.message
+                    )
+                    
+                    if not fallback_valid:
+                        # If even fallback fails, return generic safe response
+                        return {
+                            "success": False,
+                            "error": "Unable to generate a safe response at this time. Please try rephrasing your question.",
+                            "details": output_error if settings.DEBUG else None,
+                            "guardrail_metadata": output_metadata if settings.DEBUG else None
+                        }
             
             # Cache the response
             self.cache_response(site_id, request.message, response_data)
@@ -235,3 +293,39 @@ class RAGService:
             save_analytics(site_id, message)
         except Exception as e:
             logger.error(f"Error saving analytics to database: {str(e)}")
+    
+    def _generate_fallback_response(self, site_name: str, original_message: str) -> str:
+        """
+        Generate a safe fallback response when output guardrails fail
+        """
+        try:
+            # Analyze the original message to provide a contextual fallback
+            message_lower = original_message.lower()
+            
+            # Contact information requests
+            if any(word in message_lower for word in ['contact', 'phone', 'email', 'address', 'location']):
+                return f"Thank you for your interest in {site_name}. For contact information and details about our services, please visit our website or contact us directly. We're here to help!"
+            
+            # Hours/availability requests
+            elif any(word in message_lower for word in ['hours', 'open', 'closed', 'time', 'schedule']):
+                return f"Thank you for asking about {site_name}'s availability. For current hours and scheduling information, please check our website or contact us directly."
+            
+            # Service/product requests
+            elif any(word in message_lower for word in ['service', 'product', 'offer', 'provide', 'do', 'help']):
+                return f"Thank you for your interest in {site_name}'s services. We'd be happy to help you with your needs. Please contact us directly for detailed information about what we can offer."
+            
+            # Pricing requests
+            elif any(word in message_lower for word in ['price', 'cost', 'fee', 'charge', 'rate']):
+                return f"Thank you for your interest in {site_name}. For pricing information and quotes, please contact us directly. We'll be happy to discuss options that work for you."
+            
+            # General questions
+            elif any(word in message_lower for word in ['what', 'how', 'when', 'where', 'why', 'who']):
+                return f"Thank you for your question about {site_name}. We'd be happy to provide you with detailed information. Please contact us directly and we'll assist you right away."
+            
+            # Default fallback
+            else:
+                return f"Thank you for contacting {site_name}. We appreciate your interest and would be happy to help you. Please reach out to us directly for personalized assistance."
+                
+        except Exception as e:
+            logger.error(f"Error generating fallback response: {str(e)}")
+            return f"Thank you for contacting {site_name}. We're here to help! Please contact us directly for assistance."

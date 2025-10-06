@@ -246,6 +246,68 @@ async def webhook_handler(
             }
         )
 
+@app.get("/guardrails/stats")
+@limiter.limit(f"{settings.RATE_LIMIT_PER_MINUTE}/minute")
+async def get_guardrails_stats(
+    request: Request,
+    api_key: str = Depends(extract_api_key),
+    days: int = 7
+):
+    """
+    Get guardrails violation statistics
+    
+    This endpoint is useful for monitoring and debugging guardrail performance
+    """
+    try:
+        # Validate API key and get site info
+        from app.services.auth import AuthService
+        auth_service = AuthService()
+        is_valid, site_data, error = auth_service.validate_api_key(api_key)
+        
+        if not is_valid:
+            raise HTTPException(status_code=401, detail="Invalid API key")
+        
+        # Get stats from guardrails service
+        if rag_service.guardrails_service:
+            stats = rag_service.guardrails_service.get_violation_stats(
+                site_id=site_data['id'], 
+                days=days
+            )
+            
+            return JSONResponse(content={
+                "success": True,
+                "message": "Guardrails statistics retrieved successfully",
+                "data": {
+                    "site_id": site_data['id'],
+                    "site_name": site_data['name'],
+                    "period_days": days,
+                    "stats": stats,
+                    "guardrails_enabled": settings.GUARDRAILS_ENABLED,
+                    "strict_mode": settings.GUARDRAILS_STRICT_MODE
+                },
+                "timestamp": datetime.now().isoformat()
+            })
+        else:
+            return JSONResponse(content={
+                "success": False,
+                "error": "Guardrails service not enabled",
+                "timestamp": datetime.now().isoformat()
+            })
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting guardrails stats: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": "Internal server error",
+                "detail": str(e) if settings.DEBUG else None,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler"""
