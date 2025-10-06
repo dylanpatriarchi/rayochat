@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RayoChat Widget Configuration</title>
+    <link href="https://cdn.shopify.com/shopifycloud/polaris/assets/polaris.min.css" rel="stylesheet">
+    <style>
+        .rayochat-admin {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .rayochat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .rayochat-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+        .rayochat-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .rayochat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e1e3e5;
+        }
+        .rayochat-form-group {
+            margin-bottom: 25px;
+        }
+        .rayochat-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #202223;
+        }
+        .rayochat-form-group input,
+        .rayochat-form-group textarea,
+        .rayochat-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #c9cccf;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        .rayochat-form-group input:focus,
+        .rayochat-form-group textarea:focus,
+        .rayochat-form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .rayochat-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .rayochat-form-group .help-text {
+            font-size: 13px;
+            color: #6d7175;
+            margin-top: 5px;
+        }
+        .rayochat-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rayochat-checkbox input[type="checkbox"] {
+            width: auto;
+        }
+        .rayochat-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .rayochat-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .rayochat-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .rayochat-button-secondary {
+            background: #f6f6f7;
+            color: #202223;
+            border: 1px solid #c9cccf;
+        }
+        .rayochat-button-secondary:hover {
+            background: #f1f2f3;
+        }
+        .rayochat-alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        .rayochat-alert-success {
+            background: #f0f9f0;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .rayochat-alert-error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        .rayochat-alert-warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+        .rayochat-preview {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .rayochat-preview-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        .rayochat-preview-toggle:hover {
+            transform: scale(1.1);
+        }
+        .rayochat-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .rayochat-stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e1e3e5;
+        }
+        .rayochat-stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .rayochat-stat-label {
+            color: #6d7175;
+            font-size: 14px;
+        }
+        .rayochat-code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .rayochat-tabs {
+            display: flex;
+            border-bottom: 1px solid #e1e3e5;
+            margin-bottom: 30px;
+        }
+        .rayochat-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .rayochat-tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        .rayochat-tab:hover {
+            background: #f6f6f7;
+        }
+        .rayochat-tab-content {
+            display: none;
+        }
+        .rayochat-tab-content.active {
+            display: block;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="rayochat-admin">
+        <!-- Header -->
+        <div class="rayochat-header">
+            <h1>🤖 RayoChat Widget</h1>
+            <p>Intelligent AI chat widget for your Shopify store</p>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alerts"></div>
+
+        <!-- Tabs -->
+        <div class="rayochat-tabs">
+            <div class="rayochat-tab active" data-tab="configuration">Configuration</div>
+            <div class="rayochat-tab" data-tab="analytics">Analytics</div>
+            <div class="rayochat-tab" data-tab="installation">Installation</div>
+            <div class="rayochat-tab" data-tab="conversations">Conversations</div>
+        </div>
+
+        <!-- Configuration Tab -->
+        <div id="configuration" class="rayochat-tab-content active">
+            <div class="rayochat-card">
+                <h2>Widget Configuration</h2>
+                <form id="configForm">
+                    <div class="rayochat-form-group">
+                        <label for="api_key">RayoChat API Key *</label>
+                        <input type="password" id="api_key" name="api_key" placeholder="rc_s_..." required>
+                        <div class="help-text">Get your API key from the RayoChat dashboard. Format: rc_s_[32 characters]</div>
+                        <button type="button" id="testApiKey" class="rayochat-button rayochat-button-secondary" style="margin-top: 10px;">
+                            Test API Key
+                        </button>
+                    </div>
+
+                    <div class="rayochat-form-group">
+                        <div class="rayochat-checkbox">
+                            <input type="checkbox" id="widget_enabled" name="widget_enabled">
+                            <label for="widget_enabled">Enable Widget on Store</label>
+                        </div>
+                        <div class="help-text">Toggle to show/hide the chat widget on your store</div>
+                    </div>
+
+                    <div class="rayochat-form-group">
+                        <label for="widget_title">Widget Title</label>
+                        <input type="text" id="widget_title" name="widget_title" value="AI Assistant" maxlength="50">
+                        <div class="help-text">Title shown in the chat header</div>
+                    </div>
+
+                    <div class="rayochat-form-group">
+                        <label for="welcome_message">Welcome Message</label>
+                        <textarea id="welcome_message" name="welcome_message" maxlength="200">Hi! How can I help you today?</textarea>
+                        <div class="help-text">First message shown to customers</div>
+                    </div>
+
+                    <div class="rayochat-form-group">
+                        <label for="widget_position">Widget Position</label>
+                        <select id="widget_position" name="widget_position">
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                        </select>
+                    </div>
+
+                    <div class="rayochat-form-group">
+                        <label for="widget_color">Widget Color</label>
+                        <input type="color" id="widget_color" name="widget_color" value="#25D366">
+                        <div class="help-text">Color of the chat button (default: WhatsApp green)</div>
+                    </div>
+
+                    <button type="submit" class="rayochat-button">
+                        Save Configuration
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="rayochat-tab-content">
+            <div class="rayochat-stats">
+                <div class="rayochat-stat-card">
+                    <div class="rayochat-stat-number" id="totalConversations">-</div>
+                    <div class="rayochat-stat-label">Total Conversations</div>
+                </div>
+                <div class="rayochat-stat-card">
+                    <div class="rayochat-stat-number" id="totalMessages">-</div>
+                    <div class="rayochat-stat-label">Total Messages</div>
+                </div>
+                <div class="rayochat-stat-card">
+                    <div class="rayochat-stat-number" id="avgResponseTime">-</div>
+                    <div class="rayochat-stat-label">Avg Response Time</div>
+                </div>
+                <div class="rayochat-stat-card">
+                    <div class="rayochat-stat-number" id="widgetStatus">-</div>
+                    <div class="rayochat-stat-label">Widget Status</div>
+                </div>
+            </div>
+            
+            <div class="rayochat-card">
+                <h3>Analytics Dashboard</h3>
+                <p>Detailed analytics coming soon...</p>
+            </div>
+        </div>
+
+        <!-- Installation Tab -->
+        <div id="installation" class="rayochat-tab-content">
+            <div class="rayochat-card">
+                <h2>Widget Installation</h2>
+                <p>Follow these steps to install the RayoChat widget on your store:</p>
+                
+                <div id="installationInstructions">
+                    <div class="rayochat-alert rayochat-alert-warning">
+                        Please configure and enable the widget first in the Configuration tab.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversations Tab -->
+        <div id="conversations" class="rayochat-tab-content">
+            <div class="rayochat-card">
+                <h2>Recent Conversations</h2>
+                <div id="conversationsList">
+                    <p>Loading conversations...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Widget -->
+    <div class="rayochat-preview" id="previewWidget" style="display: none;">
+        <button class="rayochat-preview-toggle" id="previewToggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M6,9V7H18V9H6M14,11V13H6V11H14M18,15H6V17H18V15Z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+    <script>
+        // Global variables
+        let currentConfig = {{CONFIG}};
+        const shopDomain = '{{SHOP}}';
+        const apiKey = '{{API_KEY}}';
+        
+        // Initialize App Bridge
+        const AppBridge = window['app-bridge'];
+        const createApp = AppBridge.default;
+        const { TitleBar, Toast } = AppBridge.actions;
+        
+        const app = createApp({
+            apiKey: apiKey,
+            shopOrigin: shopDomain,
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            loadConfiguration();
+            loadAnalytics();
+            loadConversations();
+            setupEventListeners();
+            updatePreview();
+        });
+
+        // Tab functionality
+        function initializeTabs() {
+            const tabs = document.querySelectorAll('.rayochat-tab');
+            const contents = document.querySelectorAll('.rayochat-tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update active content
+                    contents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === targetTab) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    // Load data for specific tabs
+                    if (targetTab === 'analytics') {
+                        loadAnalytics();
+                    } else if (targetTab === 'conversations') {
+                        loadConversations();
+                    } else if (targetTab === 'installation') {
+                        loadInstallationCode();
+                    }
+                });
+            });
+        }
+
+        // Load configuration
+        function loadConfiguration() {
+            if (currentConfig) {
+                document.getElementById('api_key').value = currentConfig.api_key === null ? '' : '***' + (currentConfig.api_key || '').slice(-4);
+                document.getElementById('widget_enabled').checked = currentConfig.widget_enabled === 1;
+                document.getElementById('widget_title').value = currentConfig.widget_title || 'AI Assistant';
+                document.getElementById('welcome_message').value = currentConfig.welcome_message || 'Hi! How can I help you today?';
+                document.getElementById('widget_position').value = currentConfig.widget_position || 'bottom-right';
+                document.getElementById('widget_color').value = currentConfig.widget_color || '#25D366';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Configuration form
+            document.getElementById('configForm').addEventListener('submit', saveConfiguration);
+            
+            // Test API key
+            document.getElementById('testApiKey').addEventListener('click', testApiKey);
+            
+            // Preview updates
+            ['widget_title', 'welcome_message', 'widget_position', 'widget_color'].forEach(field => {
+                document.getElementById(field).addEventListener('input', updatePreview);
+            });
+            
+            document.getElementById('widget_enabled').addEventListener('change', updatePreview);
+        }
+
+        // Save configuration
+        async function saveConfiguration(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const config = {
+                api_key: formData.get('api_key'),
+                widget_enabled: formData.has('widget_enabled'),
+                widget_title: formData.get('widget_title'),
+                welcome_message: formData.get('welcome_message'),
+                widget_position: formData.get('widget_position'),
+                widget_color: formData.get('widget_color')
+            };
+            
+            // Don't send masked API key
+            if (config.api_key.startsWith('***')) {
+                delete config.api_key;
+            }
+            
+            try {
+                showLoading(true);
+                
+                const response = await fetch('/api/admin/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Configuration saved successfully!', 'success');
+                    currentConfig = { ...currentConfig, ...config };
+                    updatePreview();
+                } else {
+                    showAlert(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Test API key
+        async function testApiKey() {
+            const apiKey = document.getElementById('api_key').value;
+            
+            if (!apiKey || apiKey.startsWith('***')) {
+                showAlert('Please enter a valid API key', 'warning');
+                return;
+            }
+            
+            try {
+                const button = document.getElementById('testApiKey');
+                button.innerHTML = '<span class="spinner"></span>Testing...';
+                button.disabled = true;
+                
+                const response = await fetch('/api/admin/test-api-key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ api_key: apiKey })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('API key is valid and working!', 'success');
+                } else {
+                    showAlert(result.error || 'API key test failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error: ' + error.message, 'error');
+            } finally {
+                const button = document.getElementById('testApiKey');
+                button.innerHTML = 'Test API Key';
+                button.disabled = false;
+            }
+        }
+
+        // Load analytics
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/admin/analytics');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    document.getElementById('totalConversations').textContent = data.totalConversations || 0;
+                    document.getElementById('totalMessages').textContent = data.totalMessages || 0;
+                    document.getElementById('avgResponseTime').textContent = data.averageResponseTime ? data.averageResponseTime + 'ms' : '-';
+                    document.getElementById('widgetStatus').textContent = currentConfig?.widget_enabled ? 'Active' : 'Inactive';
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const response = await fetch('/api/admin/conversations');
+                const result = await response.json();
+                
+                const container = document.getElementById('conversationsList');
+                
+                if (result.success && result.data.length > 0) {
+                    container.innerHTML = result.data.map(conv => `
+                        <div style="border: 1px solid #e1e3e5; border-radius: 6px; padding: 15px; margin-bottom: 10px;">
+                            <div style="font-weight: 600; margin-bottom: 10px;">
+                                Conversation ${conv.id} - ${new Date(conv.created_at).toLocaleDateString()}
+                            </div>
+                            ${conv.messages.map(msg => `
+                                <div style="margin-bottom: 8px;">
+                                    <strong>User:</strong> ${msg.message}<br>
+                                    <strong>AI:</strong> ${msg.response || 'No response'}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No conversations yet.</p>';
+                }
+            } catch (error) {
+                document.getElementById('conversationsList').innerHTML = '<p>Error loading conversations.</p>';
+            }
+        }
+
+        // Load installation code
+        async function loadInstallationCode() {
+            try {
+                const response = await fetch('/api/admin/widget-code');
+                const result = await response.json();
+                
+                const container = document.getElementById('installationInstructions');
+                
+                if (result.success) {
+                    container.innerHTML = `
+                        <h3>Installation Code</h3>
+                        <p>Copy and paste this code into your theme:</p>
+                        <div class="rayochat-code-block">${result.data.code}</div>
+                        
+                        <h3>Installation Steps</h3>
+                        <ol>
+                            ${result.data.instructions.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                        
+                        <div class="rayochat-alert rayochat-alert-success">
+                            Your widget is configured and ready to use!
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="rayochat-alert rayochat-alert-warning">
+                            ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('installationInstructions').innerHTML = `
+                    <div class="rayochat-alert rayochat-alert-error">
+                        Error loading installation code: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Update preview
+        function updatePreview() {
+            const preview = document.getElementById('previewWidget');
+            const toggle = document.getElementById('previewToggle');
+            
+            if (document.getElementById('widget_enabled').checked) {
+                const color = document.getElementById('widget_color').value;
+                const position = document.getElementById('widget_position').value;
+                
+                toggle.style.backgroundColor = color;
+                preview.style.display = 'block';
+                
+                if (position === 'bottom-left') {
+                    preview.style.right = 'auto';
+                    preview.style.left = '20px';
+                } else {
+                    preview.style.left = 'auto';
+                    preview.style.right = '20px';
+                }
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        // Utility functions
+        function showAlert(message, type = 'info') {
+            const alerts = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `rayochat-alert rayochat-alert-${type}`;
+            alert.textContent = message;
+            
+            alerts.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const form = document.getElementById('configForm');
+            if (show) {
+                form.classList.add('loading');
+            } else {
+                form.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>

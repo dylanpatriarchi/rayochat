@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  shopify-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=sqlite:/app/data/database.sqlite
+      - RAG_SERVICE_URL=http://rag:8000
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    depends_on:
+      - rag
+    networks:
+      - rayochat-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Reference to existing RAG service
+  rag:
+    external: true
+    networks:
+      - rayochat-network
+
+networks:
+  rayochat-network:
+    external: true
