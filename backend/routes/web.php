@@ -92,5 +92,10 @@ Route::middleware('auth')->group(function () {
         // Analytics
         Route::get('/analytics', [SiteOwnerDashboardController::class, 'analyticsIndex'])->name('analytics.index');
         Route::get('/analytics/site/{site}', [SiteOwnerDashboardController::class, 'siteAnalytics'])->name('analytics.site');
+        
+        // Integrations
+        Route::get('/integrations', [SiteOwnerDashboardController::class, 'integrationsIndex'])->name('integrations.index');
+        Route::get('/integrations/wordpress/download', [SiteOwnerDashboardController::class, 'downloadWordPressPlugin'])->name('integrations.wordpress.download');
+        Route::get('/integrations/shopify/download', [SiteOwnerDashboardController::class, 'downloadShopifyApp'])->name('integrations.shopify.download');
     });
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Site;
 use App\Models\SiteInfoMD;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SiteOwnerDashboardController extends Controller
 {
@@ -449,4 +450,56 @@ class SiteOwnerDashboardController extends Controller
             'topKeywords'
         ));
     }
+
+    /**
+     * Show integrations index
+     */
+    public function integrationsIndex()
+    {
+        $user = auth()->user();
+        $sites = $user->sites()->get();
+        
+        return view('site-owner.integrations.index', compact('sites'));
+    }
+
+    /**
+     * Download WordPress plugin
+     */
+    public function downloadWordPressPlugin()
+    {
+        $filePath = 'private/plugins/rayochat-wordpress-plugin.zip';
+        
+        if (!Storage::exists($filePath)) {
+            return redirect()->route('site-owner.integrations.index')
+                ->with('error', 'Plugin WordPress non trovato.');
+        }
+
+        $fileName = 'rayochat-wordpress-plugin-' . date('Y-m-d') . '.zip';
+        
+        return Storage::download($filePath, $fileName, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+        ]);
+    }
+
+    /**
+     * Download Shopify app files
+     */
+    public function downloadShopifyApp()
+    {
+        $filePath = 'private/plugins/rayochat-shopify-app.zip';
+        
+        if (!Storage::exists($filePath)) {
+            return redirect()->route('site-owner.integrations.index')
+                ->with('error', 'App Shopify non trovata.');
+        }
+
+        $fileName = 'rayochat-shopify-app-' . date('Y-m-d') . '.zip';
+        
+        return Storage::download($filePath, $fileName, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+        ]);
+    }
+
 }
