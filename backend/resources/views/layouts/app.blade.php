@@ -347,11 +347,10 @@
             <div class="header-content">
                 <a href="{{ route('dashboard') }}" class="logo">RayoChat</a>
                 <nav class="nav">
-                    <a href="#" class="nav-link">Cookie Policy</a>
-                    <a href="#" class="nav-link">Privacy Policy</a>
-                    <a href="#" class="nav-link">Terms of Service</a>
+                    <a href="{{ route('cookie-policy') }}" class="nav-link">Cookie Policy</a>
+                    <a href="{{ route('privacy-policy') }}" class="nav-link">Privacy Policy</a>
+                    <a href="{{ route('terms-of-service') }}" class="nav-link">Terms of Service</a>
                     @auth
-                        <span class="text-gray">Welcome, {{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                             @csrf
                             <button type="submit" class="btn btn-secondary">Logout</button>

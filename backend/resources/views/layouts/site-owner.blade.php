@@ -285,9 +285,9 @@
                             © {{ date('Y') }} RayoChat. Tutti i diritti riservati.
                         </div>
                         <div class="flex space-x-6 text-sm">
-                            <a href="#" class="text-gray-500 hover:text-gray-700">Privacy Policy</a>
-                            <a href="#" class="text-gray-500 hover:text-gray-700">Termini di Servizio</a>
-                            <a href="#" class="text-gray-500 hover:text-gray-700">Cookie Policy</a>
+                            <a href="{{ route('privacy-policy') }}" class="text-gray-500 hover:text-gray-700">Privacy Policy</a>
+                            <a href="{{ route('terms-of-service') }}" class="text-gray-500 hover:text-gray-700">Termini di Servizio</a>
+                            <a href="{{ route('cookie-policy') }}" class="text-gray-500 hover:text-gray-700">Cookie Policy</a>
                         </div>
                     </div>
                 </div>
