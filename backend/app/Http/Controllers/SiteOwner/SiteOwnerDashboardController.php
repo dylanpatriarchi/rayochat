@@ -467,18 +467,17 @@ class SiteOwnerDashboardController extends Controller
      */
     public function downloadWordPressPlugin()
     {
-        $filePath = 'private/plugins/rayochat-wordpress-plugin.zip';
+        $filePath = storage_path('app/private/plugins/rayochat-wordpress-plugin.zip');
         
-        if (!Storage::exists($filePath)) {
+        if (!file_exists($filePath)) {
             return redirect()->route('site-owner.integrations.index')
                 ->with('error', 'Plugin WordPress non trovato.');
         }
 
         $fileName = 'rayochat-wordpress-plugin-' . date('Y-m-d') . '.zip';
         
-        return Storage::download($filePath, $fileName, [
+        return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
         ]);
     }
 
@@ -487,18 +486,17 @@ class SiteOwnerDashboardController extends Controller
      */
     public function downloadShopifyApp()
     {
-        $filePath = 'private/plugins/rayochat-shopify-app.zip';
+        $filePath = storage_path('app/private/plugins/rayochat-shopify-app.zip');
         
-        if (!Storage::exists($filePath)) {
+        if (!file_exists($filePath)) {
             return redirect()->route('site-owner.integrations.index')
                 ->with('error', 'App Shopify non trovata.');
         }
 
         $fileName = 'rayochat-shopify-app-' . date('Y-m-d') . '.zip';
         
-        return Storage::download($filePath, $fileName, [
+        return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
         ]);
     }
 
