@@ -465,39 +465,37 @@ class SiteOwnerDashboardController extends Controller
     /**
      * Download WordPress plugin
      */
-    public function downloadWordPressPlugin()
-    {
-        $filePath = storage_path('app/private/plugins/rayochat-wordpress-plugin.zip');
-        
-        if (!file_exists($filePath)) {
-            return redirect()->route('site-owner.integrations.index')
-                ->with('error', 'Plugin WordPress non trovato.');
-        }
-
-        $fileName = 'rayochat-wordpress-plugin-' . date('Y-m-d') . '.zip';
-        
-        return response()->download($filePath, $fileName, [
-            'Content-Type' => 'application/zip',
-        ]);
+public function downloadWordPressPlugin()
+{
+    $filePath = storage_path('app/private/plugins/rayochat-wordpress-plugin.zip');
+    
+    if (!file_exists($filePath)) {
+        return redirect()->route('site-owner.integrations.index')
+            ->with('error', 'Plugin WordPress non trovato.');
     }
 
+    $fileName = 'rayochat-wordpress-plugin-' . date('Y-m-d') . '.zip';
+    
+    return response()->download($filePath, $fileName, [
+        'Content-Type' => 'application/zip',
+    ]);
+}
     /**
      * Download Shopify app files
      */
-    public function downloadShopifyApp()
-    {
-        $filePath = storage_path('app/private/plugins/rayochat-shopify-app.zip');
-        
-        if (!file_exists($filePath)) {
-            return redirect()->route('site-owner.integrations.index')
-                ->with('error', 'App Shopify non trovata.');
-        }
-
-        $fileName = 'rayochat-shopify-app-' . date('Y-m-d') . '.zip';
-        
-        return response()->download($filePath, $fileName, [
-            'Content-Type' => 'application/zip',
-        ]);
+public function downloadShopifyApp()
+{
+    $filePath = storage_path('app/private/plugins/rayochat-shopify-app.zip');
+    
+    if (!file_exists($filePath)) {
+        return redirect()->route('site-owner.integrations.index')
+            ->with('error', 'App Shopify non trovata.');
     }
 
+    $fileName = 'rayochat-shopify-app-' . date('Y-m-d') . '.zip';
+    
+    return response()->download($filePath, $fileName, [
+        'Content-Type' => 'application/zip',
+    ]);
+}
 }

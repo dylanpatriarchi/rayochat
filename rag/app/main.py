@@ -57,11 +57,11 @@ app = FastAPI(
 app.add_middleware(SecurityHeadersMiddleware)
 
 # Add trusted host middleware (only allow specific hosts)
-if not settings.DEBUG:
-    app.add_middleware(
-        TrustedHostMiddleware, 
-        allowed_hosts=["localhost", "127.0.0.1", "rag", "rayochat_rag"]
-    )
+#if not settings.DEBUG:
+#    app.add_middleware(
+#        TrustedHostMiddleware, 
+#        allowed_hosts=["localhost", "127.0.0.1", "rag", "rayochat_rag"]
+#    )
 
 # Configure CORS
 app.add_middleware(

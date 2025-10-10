@@ -24,3 +24,6 @@ Homestead.yaml
 Thumbs.db
 .composer/
 .config/
+.config
+.config/psysh
+.lesshst

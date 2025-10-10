@@ -1,0 +1,17 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (]8;;file://srv1050030/usr/lib/systemd/system/nginx.service\/usr/lib/systemd/system/nginx.service]8;;\; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Wed 2025-10-08 18:35:25 UTC; 25s ago
+ Invocation: 1446707ea79249a0a240c4931863885c
+       Docs: ]8;;man:nginx(8)\man:nginx(8)]8;;\
+    Process: 46585 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 46588 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 46589 (nginx)
+      Tasks: 2[0;38;5;245m (limit: 4676)[0m
+     Memory: 2.1M (peak: 2.3M)
+        CPU: 24ms
+     CGroup: /system.slice/nginx.service
+             ├─[0;38;5;245m46589 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"[0m
+             └─[0;38;5;245m46590 "nginx: worker process"[0m
+
+Oct 08 18:35:25 srv1050030 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Oct 08 18:35:25 srv1050030 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
