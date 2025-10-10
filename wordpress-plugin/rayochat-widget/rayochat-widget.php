@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 define('RAYOCHAT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('RAYOCHAT_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('RAYOCHAT_PLUGIN_VERSION', '1.0.0');
-define('RAYOCHAT_API_URL', 'http://chat.rayo.consulting:8002');
+define('RAYOCHAT_API_URL', 'https://chat.rayo.consulting/api');
 
 /**
  * Main RayoChat Widget Class

@@ -86,7 +86,7 @@ SHOPIFY_API_SCOPES=read_themes,write_themes,read_script_tags,write_script_tags
 SHOPIFY_APP_URL=https://your-app-url.ngrok.io
 
 # RayoChat Integration
-RAG_SERVICE_URL=http://localhost:8002
+RAG_SERVICE_URL=https://chat.rayo.consulting/api
 RAG_SERVICE_INTERNAL_URL=http://rag:8000
 
 # Security
